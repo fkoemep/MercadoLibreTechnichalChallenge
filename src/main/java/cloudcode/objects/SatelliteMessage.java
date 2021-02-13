@@ -12,7 +12,7 @@ public class SatelliteMessage {
     private String name;
     private Location satelliteLocation;
 
-    private enum location {
+    public enum location {
         KENOBI(new Location(-500.00, -200.00)), SKYWALKER(new Location(100.00,-100.00)), SATO(new Location(500.00,100.00));
 
         private Location location;
@@ -31,8 +31,10 @@ public class SatelliteMessage {
     @JsonCreator
     public SatelliteMessage(@JsonProperty("message") String[] message, @JsonProperty("distance") Double distance, @JsonProperty("name") String name){
 
+
+
         if(message != null && distance != null && name != null && message.length > 0 && EnumUtils.isValidEnum(satelliteName.class,name.toUpperCase())){
-            this.name = name;
+            this.name = name.toLowerCase();
             this.distance = distance;
             this.message = message;
             this.satelliteLocation = location.valueOf(name.toUpperCase()).getLocation();
@@ -56,7 +58,7 @@ public class SatelliteMessage {
 
     public void setName(String name) {
         if(name != null && EnumUtils.isValidEnum(satelliteName.class,name.toUpperCase())){
-            this.name = name;
+            this.name = name.toLowerCase();
             this.satelliteLocation = location.valueOf(name.toUpperCase()).getLocation();
         }
         else throw new JsonParseException();

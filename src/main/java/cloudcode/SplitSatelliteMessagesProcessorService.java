@@ -15,13 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.rmi.UnexpectedException;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class SplitSatelliteMessagesProcessorService {
@@ -88,10 +87,11 @@ should not happen since we've set a concurrency limit for 3 simultaneous request
             try{
                 RequestObject req = new RequestObject(satelliteMessages.toArray(new SatelliteMessage[0]));
 
-                List<String[]> messages = new ArrayList<>();
-                List<Double> distances = new ArrayList<>();
 
-                satelliteMessages.forEach((satelliteMessage) -> {messages.add(satelliteMessage.getMessage()); distances.add(satelliteMessage.getDistance());});
+                List<String[]> messages = Arrays.stream(req.getSatelliteMessages()).map(SatelliteMessage::getMessage).collect(Collectors.toList());
+
+                Double[] distances = Arrays.stream(req.getSatelliteMessages()).sorted(Comparator.comparing(SatelliteMessage::getName))
+                        .map(SatelliteMessage::getDistance).toArray(Double[]::new);
 
                 //Clearing the list and returning just in case Google Cloud Run decides to reuse the container instance.
                 satelliteMessages.clear();
@@ -102,6 +102,11 @@ should not happen since we've set a concurrency limit for 3 simultaneous request
                 //Clearing the list and returning just in case Google Cloud Run decides to reuse the container instance.
                 satelliteMessages.clear();
                 return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageSource.getMessage("INVALID_JSON_MESSAGE", null, Locale.US)));
+            }
+            catch (UnexpectedException e){
+                //Clearing the list and returning just in case Google Cloud Run decides to reuse the container instance.
+                satelliteMessages.clear();
+                return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US)));
             }
         }
     }
