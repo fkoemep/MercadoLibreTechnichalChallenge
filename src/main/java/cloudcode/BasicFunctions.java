@@ -1,11 +1,12 @@
 package cloudcode;
 
-import cloudcode.objects.Location;
-import cloudcode.objects.SatelliteMessage;
+import cloudcode.entities.Location;
+import cloudcode.entities.SatelliteConstants;
+import cloudcode.exceptions.LocationProcessingException;
+import cloudcode.exceptions.MessageProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.rmi.UnexpectedException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class BasicFunctions {
     private static final Logger logger = LoggerFactory.getLogger(BasicFunctions.class);
     private static final double EPSILON = 0.000001;
 
-    public static String GetMessage(List<String[]> messages) throws UnexpectedException {
+    public static String GetMessage(List<String[]> messages) throws MessageProcessingException {
 
         List<String[]> filteredList = messages.stream().map(stringArray -> Arrays.stream(stringArray).filter(string -> !string.trim().isEmpty()).toArray(String[]::new))
                                     .collect(Collectors.toList());
@@ -24,16 +25,16 @@ public class BasicFunctions {
 
         String message = "";
 
-//        throw new UnexpectedException("");
+//        throw new MessageProcessingException("");
         return message;
     }
 
-    public static Location GetLocation(Double[] distances) throws UnexpectedException {
+    public static Location GetLocation(Double[] distances) throws LocationProcessingException {
 
         Location position = calculateThreeCircleIntersection(distances[0], distances[1], distances[2]);
 
         if(position == null){
-            throw new UnexpectedException("");
+            throw new LocationProcessingException("");
         }
 
         return position;
@@ -41,12 +42,12 @@ public class BasicFunctions {
 
     //Do not change the parameter positions unless you prove mathematically that doing so does not change the result. The array in the caller function requires this order.
     private static Location calculateThreeCircleIntersection(double rKenobi, double rSato, double rSkywalker) {
-        double xKenobi = SatelliteMessage.location.KENOBI.getLocation().getX();
-        double yKenobi = SatelliteMessage.location.KENOBI.getLocation().getY();
-        double xSato = SatelliteMessage.location.SATO.getLocation().getX();
-        double ySato = SatelliteMessage.location.SATO.getLocation().getY();
-        double xSkywalker = SatelliteMessage.location.SKYWALKER.getLocation().getX();
-        double ySkywalker = SatelliteMessage.location.SKYWALKER.getLocation().getY();
+        double xKenobi = SatelliteConstants.location.KENOBI.getLocation().getX();
+        double yKenobi = SatelliteConstants.location.KENOBI.getLocation().getY();
+        double xSato = SatelliteConstants.location.SATO.getLocation().getX();
+        double ySato = SatelliteConstants.location.SATO.getLocation().getY();
+        double xSkywalker = SatelliteConstants.location.SKYWALKER.getLocation().getX();
+        double ySkywalker = SatelliteConstants.location.SKYWALKER.getLocation().getY();
 
         double a, dx, dy, d, h, rx, ry;
         double point2_x, point2_y;

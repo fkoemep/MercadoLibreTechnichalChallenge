@@ -1,4 +1,4 @@
-package cloudcode.objects;
+package cloudcode.entities;
 
 public class ResponseObject {
     private Location position;

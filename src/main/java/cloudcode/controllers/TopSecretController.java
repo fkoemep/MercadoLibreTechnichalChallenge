@@ -1,10 +1,12 @@
-package cloudcode.web;
+package cloudcode.controllers;
 
 import cloudcode.BasicFunctions;
-import cloudcode.SplitSatelliteMessagesProcessorService;
-import cloudcode.objects.RequestObject;
-import cloudcode.objects.ResponseObject;
-import cloudcode.objects.SatelliteMessage;
+import cloudcode.entities.RequestObject;
+import cloudcode.entities.ResponseObject;
+import cloudcode.entities.SatelliteMessage;
+import cloudcode.exceptions.LocationProcessingException;
+import cloudcode.exceptions.MessageProcessingException;
+import cloudcode.services.SplitSatelliteMessagesProcessorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,8 +59,10 @@ public final class TopSecretController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("INVALID_JSON_MESSAGE", null, Locale.US));
       }
     }
-    catch (UnexpectedException e){
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US));
+    catch (LocationProcessingException | MessageProcessingException e){
+      synchronized (this) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US));
+      }
     }
   }
 

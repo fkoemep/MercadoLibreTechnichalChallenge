@@ -26,7 +26,7 @@
 #   JAVA_HOME - location of a JDK home dir
 #
 # Optional ENV vars
-# -----------------
+# -----------------topSecret
 #   M2_HOME - location of maven2's installed home dir
 #   MAVEN_OPTS - parameters passed to the Java VM when running Maven
 #     e.g. to debug Maven itself, use

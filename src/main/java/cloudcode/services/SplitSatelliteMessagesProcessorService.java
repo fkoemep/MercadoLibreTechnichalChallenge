@@ -1,8 +1,11 @@
-package cloudcode;
+package cloudcode.services;
 
-import cloudcode.objects.RequestObject;
-import cloudcode.objects.ResponseObject;
-import cloudcode.objects.SatelliteMessage;
+import cloudcode.BasicFunctions;
+import cloudcode.entities.RequestObject;
+import cloudcode.entities.ResponseObject;
+import cloudcode.entities.SatelliteMessage;
+import cloudcode.exceptions.LocationProcessingException;
+import cloudcode.exceptions.MessageProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.rmi.UnexpectedException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
@@ -50,7 +52,7 @@ public class SplitSatelliteMessagesProcessorService {
 
             if(satelliteMessages.size() == 0){
                 waitUntil3Messages = new CountDownLatch(1);
-                task = splitSatelliteMessagesProcessorService.run();
+                task = splitSatelliteMessagesProcessorService.execute();
             }
 
 /*If before adding a message there's 3 satelliteMessages already, it means that there're more than 3 simultaneous requests...something that
@@ -71,7 +73,7 @@ should not happen since we've set a concurrency limit for 3 simultaneous request
     }
 
     @Async
-    public CompletableFuture<ResponseEntity> run(){
+    public CompletableFuture<ResponseEntity> execute(){
 
         if(satelliteMessages.size() < 3){
             try{
@@ -103,7 +105,7 @@ should not happen since we've set a concurrency limit for 3 simultaneous request
                 satelliteMessages.clear();
                 return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageSource.getMessage("INVALID_JSON_MESSAGE", null, Locale.US)));
             }
-            catch (UnexpectedException e){
+            catch (LocationProcessingException | MessageProcessingException e){
                 //Clearing the list and returning just in case Google Cloud Run decides to reuse the container instance.
                 satelliteMessages.clear();
                 return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US)));

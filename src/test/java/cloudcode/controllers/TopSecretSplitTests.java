@@ -1,7 +1,7 @@
-package cloudcode.web;
+package cloudcode.controllers;
 
 import cloudcode.BasicFunctions;
-import cloudcode.objects.ResponseObject;
+import cloudcode.entities.ResponseObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.apache.http.client.utils.URIBuilder;

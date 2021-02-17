@@ -1,4 +1,4 @@
-package cloudcode.objects;
+package cloudcode.entities;
 
 public class Location {
     private Double x;

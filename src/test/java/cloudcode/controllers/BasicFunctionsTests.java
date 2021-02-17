@@ -1,14 +1,15 @@
-package cloudcode.web;
+package cloudcode.controllers;
 
 import cloudcode.BasicFunctions;
-import cloudcode.objects.Location;
+import cloudcode.entities.Location;
+import cloudcode.exceptions.LocationProcessingException;
+import cloudcode.exceptions.MessageProcessingException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -80,7 +81,7 @@ public class BasicFunctionsTests {
 
             assertThat(location.getY(), closeTo(correctCalculatedLocationY, 0.000001));
         }
-        catch (UnexpectedException e){
+        catch (LocationProcessingException e){
             assertThat("a", equalTo("b"));
         }
     }
@@ -91,7 +92,7 @@ public class BasicFunctionsTests {
             BasicFunctions.GetLocation(testDistancesInvalid);
             assertThat("a", equalTo("b"));
         }
-        catch (UnexpectedException e){
+        catch (LocationProcessingException e){
             assertThat(e.getMessage(), equalTo(""));
         }
     }
@@ -103,7 +104,7 @@ public class BasicFunctionsTests {
             assertThat(message, notNullValue());
             assertThat(message, equalTo(correctDecodedMessage));
         }
-        catch (UnexpectedException e){
+        catch (MessageProcessingException e){
             assertThat("a", equalTo("b"));
         }
     }
@@ -114,7 +115,7 @@ public class BasicFunctionsTests {
             BasicFunctions.GetMessage(messageListInvalid);
             assertThat("a", equalTo("b"));
         }
-        catch (UnexpectedException e){
+        catch (MessageProcessingException e){
             assertThat(e.getMessage(), equalTo(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US)));
         }
     }

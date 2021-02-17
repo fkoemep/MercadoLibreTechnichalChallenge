@@ -1,7 +1,7 @@
-package cloudcode.web;
+package cloudcode.controllers;
 
-import cloudcode.SplitSatelliteMessagesProcessorService;
-import cloudcode.objects.SatelliteMessage;
+import cloudcode.services.SplitSatelliteMessagesProcessorService;
+import cloudcode.entities.SatelliteMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

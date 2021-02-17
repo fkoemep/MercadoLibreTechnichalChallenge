@@ -1,4 +1,4 @@
-package cloudcode.objects;
+package cloudcode.entities;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,32 +12,14 @@ public class SatelliteMessage {
     private String name;
     private Location satelliteLocation;
 
-    public enum location {
-        KENOBI(new Location(-500.00, -200.00)), SKYWALKER(new Location(100.00,-100.00)), SATO(new Location(500.00,100.00));
-
-        private Location location;
-
-        location(Location location) {
-            this.location = location;
-        }
-        public Location getLocation() {
-            return this.location;
-        }
-    }
-
-    private enum satelliteName {KENOBI, SKYWALKER, SATO}
-
-
     @JsonCreator
     public SatelliteMessage(@JsonProperty("message") String[] message, @JsonProperty("distance") Double distance, @JsonProperty("name") String name){
 
-
-
-        if(message != null && distance != null && name != null && message.length > 0 && EnumUtils.isValidEnum(satelliteName.class,name.toUpperCase())){
+        if(message != null && distance != null && name != null && message.length > 0 && EnumUtils.isValidEnum(SatelliteConstants.satelliteName.class,name.toUpperCase())){
             this.name = name.toLowerCase();
             this.distance = distance;
             this.message = message;
-            this.satelliteLocation = location.valueOf(name.toUpperCase()).getLocation();
+            this.satelliteLocation = SatelliteConstants.location.valueOf(name.toUpperCase()).getLocation();
         }
         else throw new JsonParseException();
     }
@@ -57,9 +39,9 @@ public class SatelliteMessage {
     }
 
     public void setName(String name) {
-        if(name != null && EnumUtils.isValidEnum(satelliteName.class,name.toUpperCase())){
+        if(name != null && EnumUtils.isValidEnum(SatelliteConstants.satelliteName.class,name.toUpperCase())){
             this.name = name.toLowerCase();
-            this.satelliteLocation = location.valueOf(name.toUpperCase()).getLocation();
+            this.satelliteLocation = SatelliteConstants.location.valueOf(name.toUpperCase()).getLocation();
         }
         else throw new JsonParseException();
     }

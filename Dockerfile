@@ -19,7 +19,7 @@ RUN mvn package -DskipTests -X
 FROM adoptopenjdk/openjdk11:alpine-slim
 
 # Copy the jar to the production image from the builder stage.
-COPY --from=build-env /app/target/topSecret-*.jar /topSecret.jar
+COPY --from=build-env /app/target/mercadolibre-technical-challenge-*.jar /mercadolibre-technical-challenge.jar
 
-# Run the web service on container startup.
-CMD ["java", "-jar", "/topSecret.jar"]
+# Run the controllers service on container startup.
+CMD ["java", "-jar", "/mercadolibre-technical-challenge.jar"]
