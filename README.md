@@ -43,7 +43,7 @@ To make matters even more confusing, the document states that the names of the f
 
 We calculate the location of the spaceship given 3 points (x,y) and 3 distances. The mathematical idea here is to create 3 circumferences centered in a specific x,y coordinate (each for every satellite) with their corresponding radiuses and find if they intersect and where.
 
-As for today we're awaiting for more details and/or examples for the `GetMessage()` function due to the fact that not even the most advanced NLP algorithms are able to deal with such a scenario where they have to untokenize and reorder words from 3 different arrays.
+To recover the message, we find the array that has the longest lenght from the first word until the end creating a "negative array index". We then iterate each word in every array starting from the negative index until the end and we add each word to a HashSet. When this HashSet has 1 or 2 different values, we understand that either all the words are the same in that index or that there's at least a blank space and at least one word so we delete the blank space and return the word. Otherwise it's not possible to decode the word, hence we return an empty string.
 
 ## The project requirements:
 ![Challenge](Challenge.png)

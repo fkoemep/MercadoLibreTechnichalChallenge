@@ -7,33 +7,49 @@ import cloudcode.exceptions.MessageProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class BasicFunctions {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicFunctions.class);
     private static final double EPSILON = 0.000001;
 
-    public static String GetMessage(List<String[]> messages) throws MessageProcessingException {
+    public static String[] GetMessage(List<String[]> messages) throws MessageProcessingException {
 
-        List<String[]> filteredList = messages.stream().map(stringArray -> Arrays.stream(stringArray).filter(string -> !string.trim().isEmpty()).toArray(String[]::new))
-                                    .collect(Collectors.toList());
+        //Getting the message lenght, we ignore safety checks since we've previously validated the data
+        Integer maxLenght = messages.stream().map(strings -> IntStream.range(0, strings.length - 1).map(i -> strings.length - 1 - i)
+                            .filter(i -> !strings[i].trim().isEmpty()).findFirst().orElse(-1)).max(Integer::compare).get();
 
+        List<String> message = new ArrayList<String>();
+        for(int i = maxLenght - 1; i >= 0; i--){
+            Set<String> temp = new HashSet<String>();
+            temp.add(messages.get(0)[messages.get(0).length - 1 - i].trim());
+            temp.add(messages.get(1)[messages.get(1).length - 1 - i].trim());
+            temp.add(messages.get(2)[messages.get(2).length - 1 - i].trim());
 
+            //Two or more different messages in the same position, we add a blank space
+            if (temp.size() == 3){
+                message.add("");
+            }
+            else{
+                temp.remove("");
+                message.add(temp.iterator().next());
+            }
+        }
 
-        String message = "";
+        if(message.size() == 0){
+            throw new MessageProcessingException("");
+        }
 
-//        throw new MessageProcessingException("");
-        return message;
+        return Arrays.copyOf(message.toArray(), message.toArray().length, String[].class);
     }
 
     public static Location GetLocation(Double[] distances) throws LocationProcessingException {
 
         Location position = calculateThreeCircleIntersection(distances[0], distances[1], distances[2]);
 
-        if(position == null){
+        if (position == null) {
             throw new LocationProcessingException("");
         }
 

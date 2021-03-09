@@ -34,7 +34,7 @@ public final class TopSecretController {
   }
 
   @PostMapping(value = "/topsecret", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity topSecretSplitPOST(@RequestBody Map satelliteMessages){
+  public ResponseEntity topSecretPOST(@RequestBody Map satelliteMessages){
     try{
       RequestObject result = objectMapper.convertValue(satelliteMessages, RequestObject.class);
 

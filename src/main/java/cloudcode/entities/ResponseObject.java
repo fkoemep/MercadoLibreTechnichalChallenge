@@ -2,14 +2,14 @@ package cloudcode.entities;
 
 public class ResponseObject {
     private Location position;
-    private String message;
+    private String[] message;
 
-    public ResponseObject(Location position, String message){
+    public ResponseObject(Location position, String[] message){
         this.position = position;
         this.message = message;
     }
 
-    public String getMessage() {
+    public String[] getMessage() {
         return message;
     }
 
@@ -17,7 +17,7 @@ public class ResponseObject {
         return position;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(String[] message) {
         this.message = message;
     }
 

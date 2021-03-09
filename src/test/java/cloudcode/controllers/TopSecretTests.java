@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class TopSecretTests {
     private final String BASE_URL = "http://localhost:8080";
     private static final String BASE_URL_PROD = "https://melichallenge-kkhnr7cx4q-rj.a.run.app";
-    private final String functionUrl = BASE_URL_PROD + "/topsecret/";
+    private final String functionUrl = BASE_URL + "/topsecret/";
 
     private final HttpClient client = HttpClient.newHttpClient();
 
@@ -65,7 +65,7 @@ public class TopSecretTests {
     private final Double[] testDistances = new Double[]{testDistance.KENOBI.distance, testDistance.SATO.distance, testDistance.SKYWALKER.distance};
 
     public enum testMessagesArray {
-        KENOBI(new String[]{"", "", ""}), SKYWALKER(new String[]{"", "", ""}), SATO(new String[]{"", "", ""});
+        KENOBI(new String[]{"", "este", "es", "un", "mensaje"}), SKYWALKER(new String[]{"este", "", "un", "mensaje"}), SATO(new String[]{"", "", "es", " ", "mensaje"});
 
         private String[] array;
 

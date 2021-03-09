@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -52,12 +51,12 @@ public class BasicFunctionsTests {
 
     private final Double[] testDistancesInvalid = new Double[]{testDistanceInvalid.KENOBI.distance, testDistanceInvalid.SATO.distance, testDistanceInvalid.SKYWALKER.distance};
 
-    private final String correctDecodedMessage = "";
+    private final String[] correctDecodedMessage = new String[]{"este", "es", "un", "mensaje"};
 
     private final List<String[]> messageList = new ArrayList<>(){{
-        add(new String[]{"aaaaaaaaaaaaa", "", "cccccccccccc", "   "});
-        add(new String[]{"", "55555", ""});
-        add(new String[]{"", "", "7777777", " ", "qqqqq"});
+        add(new String[]{"", "este", "es", "un", "mensaje"});
+        add(new String[]{"este", "", "un", "mensaje"});
+        add(new String[]{"", "", "es", " ", "mensaje"});
     }};
 
     private final List<String[]> messageListInvalid = new ArrayList<>(){{
@@ -100,7 +99,7 @@ public class BasicFunctionsTests {
     @Test
     public void verifyCorrectMessageCalculation() throws Throwable {
         try {
-            String message = BasicFunctions.GetMessage(messageList);
+            String[] message = BasicFunctions.GetMessage(messageList);
             assertThat(message, notNullValue());
             assertThat(message, equalTo(correctDecodedMessage));
         }
@@ -116,7 +115,7 @@ public class BasicFunctionsTests {
             assertThat("a", equalTo("b"));
         }
         catch (MessageProcessingException e){
-            assertThat(e.getMessage(), equalTo(messageSource.getMessage("INSUFFICIENT_DATA_MESSAGE", null, Locale.US)));
+            assertThat(e.getMessage(), equalTo(""));
         }
     }
 }
